@@ -1,0 +1,11 @@
+<!-- Label Studio → Project → Settings → Labeling Interface → Code. Satu pilihan per foto, hotkey 1–4. -->
+<View>
+  <Image name="image" value="$image" zoom="true" zoomControl="true" rotateControl="false"/>
+  <Header value="Apakah foto ini layak untuk dinilai?"/>
+  <Choices name="inspectable" toName="image" choice="single-radio" required="true" showInline="true">
+    <Choice value="Layak" hotkey="1"/>
+    <Choice value="Tidak layak" hotkey="2"/>
+    <Choice value="Label tidak terbaca" hotkey="3"/>
+    <Choice value="Ragu" hotkey="4"/>
+  </Choices>
+</View>

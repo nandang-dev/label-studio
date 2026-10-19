@@ -1,0 +1,54 @@
+# Label Studio untuk labeling foto "layak / tidak layak" oleh tim lain.
+# Deploy di Coolify: New Resource → Docker Compose → repo ini. Lihat README.md.
+services:
+  label-studio:
+    # Versi sama dengan yang dipakai carton-trainer (heartexlabs/label-studio, Apache-2.0).
+    image: heartexlabs/label-studio:1.13.1
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Coolify: domain dipetakan ke port 8080 container
+      - SERVICE_FQDN_LABELSTUDIO_8080
+      # URL publik lengkap, mis. https://label.bagdja.com (dipakai untuk link gambar & undangan)
+      - LABEL_STUDIO_HOST=${LABEL_STUDIO_HOST:?isi LABEL_STUDIO_HOST di Coolify}
+      - CSRF_TRUSTED_ORIGINS=${LABEL_STUDIO_HOST}
+      # Akun admin pertama (dibuat saat start pertama). Nilai dari Environment Variables Coolify.
+      - LABEL_STUDIO_USERNAME=${LABEL_STUDIO_USERNAME:?isi LABEL_STUDIO_USERNAME di Coolify}
+      - LABEL_STUDIO_PASSWORD=${LABEL_STUDIO_PASSWORD:?isi LABEL_STUDIO_PASSWORD di Coolify}
+      # Anggota tim hanya bisa daftar lewat link undangan
+      - LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK=true
+      - DATA_UPLOAD_MAX_NUMBER_FILES=1000
+      - DJANGO_DB=default
+      - POSTGRE_NAME=labelstudio
+      - POSTGRE_USER=labelstudio
+      - POSTGRE_PASSWORD=${LABEL_STUDIO_DB_PASSWORD:?isi LABEL_STUDIO_DB_PASSWORD di Coolify}
+      - POSTGRE_HOST=postgres
+      - POSTGRE_PORT=5432
+    volumes:
+      # Foto yang di-upload + file media Label Studio
+      - ${LABEL_STUDIO_DATA_HOST_DIR:-/data/label-studio/data}:/label-studio/data
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=labelstudio
+      - POSTGRES_USER=labelstudio
+      - POSTGRES_PASSWORD=${LABEL_STUDIO_DB_PASSWORD:?isi LABEL_STUDIO_DB_PASSWORD di Coolify}
+    volumes:
+      - ${LABEL_STUDIO_DB_HOST_DIR:-/data/label-studio/postgres}:/var/lib/postgresql/data
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labelstudio -d labelstudio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
