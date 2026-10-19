@@ -63,7 +63,10 @@ Repo ini **hanya berisi konfigurasi**; aplikasinya memakai image resmi
 
 1. **Create Project** → nama `Fast Reject v1`.
 2. **Labeling Setup → Custom template → Code**: tempel isi `label-config.xml` → Save.
-3. **Settings → Annotation**: *Distribute Labeling Tasks* = **Auto** supaya setiap orang mendapat foto berbeda.
+3. **Settings → Annotation**: biarkan *Use predictions to prelabel tasks* **ON** (versi prediksi dipilih otomatis
+   oleh skrip upload). Pembagian tugas tidak perlu diatur: di versi Community, *Label All Tasks* memberi setiap
+   orang foto yang belum dilabeli dan mengunci foto yang sedang dibuka orang lain
+   (*Distribute Labeling Tasks* hanya ada di Enterprise).
 4. Foto **jangan** di-upload manual satu per satu. Foto dipilih dan di-upload lewat skrip pre-sort
    (`carton-trainer`), sekaligus dengan prediksi awal, sehingga tim cukup setuju/mengoreksi.
    Skrip membutuhkan **Access Token** admin: avatar (kanan atas) → *Account & Settings* → *Access Token*.
