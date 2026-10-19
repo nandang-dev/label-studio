@@ -42,7 +42,9 @@ Repo ini **hanya berisi konfigurasi**; aplikasinya memakai image resmi
    | `LABEL_STUDIO_HOST` | `https://label.bagdja.com` | URL publik lengkap, tanpa `/` di akhir |
    | `LABEL_STUDIO_USERNAME` | `anotator@kantor.local` | Admin, **sama dengan Label Studio lokal** di carton-trainer |
    | `LABEL_STUDIO_PASSWORD` | (salin dari `carton-trainer/.env`) | Sama dengan `LABEL_STUDIO_PASSWORD` lokal supaya login-nya sama |
-   | `LABEL_STUDIO_DB_PASSWORD` | (acak, min. 20 karakter) | Tidak perlu diingat, hanya dipakai antar-container |
+
+   Password database (`SERVICE_PASSWORD_POSTGRES`) **dibuat otomatis oleh Coolify**, tidak perlu diisi.
+   Jangan diubah setelah deploy pertama: PostgreSQL menyimpan password saat database dibuat.
 5. **Domain**: di service `label-studio`, isi `https://label.bagdja.com:8080`
    (`:8080` = port di dalam container, tidak muncul di browser).
 6. **Deploy**. Kedua service harus *Running (healthy)*. Start pertama ±1–2 menit (migrasi database).
@@ -90,7 +92,7 @@ Karena itu instance ini **khusus untuk labeling foto muatan**.
 ## Menjalankan lokal (opsional)
 
 ```sh
-cp .env.example .env   # isi kedua password
+cp .env.example .env   # isi LABEL_STUDIO_PASSWORD dan SERVICE_PASSWORD_POSTGRES
 docker compose up -d   # tidak mem-publish port; tambahkan `ports: ["8080:8080"]` untuk akses dari browser
 ```
 
