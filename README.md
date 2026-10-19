@@ -45,10 +45,19 @@ Repo ini **hanya berisi konfigurasi**; aplikasinya memakai image resmi
 
    Password database (`SERVICE_PASSWORD_POSTGRES`) **dibuat otomatis oleh Coolify**, tidak perlu diisi.
    Jangan diubah setelah deploy pertama: PostgreSQL menyimpan password saat database dibuat.
+   **Jangan** menambahkan `LABEL_STUDIO_DATA_HOST_DIR` / `LABEL_STUDIO_DB_HOST_DIR` (hanya untuk lokal).
 5. **Domain**: di service `label-studio`, isi `https://label.bagdja.com:8080`
    (`:8080` = port di dalam container, tidak muncul di browser).
 6. **Deploy**. Kedua service harus *Running (healthy)*. Start pertama ±1–2 menit (migrasi database).
 7. Buka `https://label.bagdja.com`, login dengan email & password langkah 4.
+
+### Troubleshooting
+
+| Gejala | Penyebab | Solusi |
+|---|---|---|
+| Browser: `no available server`, sertifikat "Not Secure" | Container label-studio belum *healthy* (Traefik tidak meneruskan ke container yang belum sehat) | Lihat log service `label-studio` |
+| `PermissionError: ... '/label-studio/data/media'` | Folder data dimiliki root | `sudo chown -R 1001:0 /data/label-studio/data`, lalu Restart |
+| `password authentication failed for user "labelstudio"` | Database sudah dibuat dengan password lama (password hanya dipakai saat inisialisasi) | Di container postgres: `psql -U labelstudio -d labelstudio -c "ALTER USER labelstudio PASSWORD '$POSTGRES_PASSWORD';"`, lalu Restart |
 
 ## Siapkan project labeling
 
