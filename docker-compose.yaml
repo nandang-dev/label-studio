@@ -23,7 +23,8 @@ services:
       - DJANGO_DB=default
       - POSTGRE_NAME=labelstudio
       - POSTGRE_USER=labelstudio
-      - POSTGRE_PASSWORD=${LABEL_STUDIO_DB_PASSWORD:?isi LABEL_STUDIO_DB_PASSWORD di Coolify}
+      # Dibuat & disimpan otomatis oleh Coolify (magic variable), tidak perlu diisi manual
+      - POSTGRE_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
       - POSTGRE_HOST=postgres
       - POSTGRE_PORT=5432
     volumes:
@@ -43,7 +44,7 @@ services:
     environment:
       - POSTGRES_DB=labelstudio
       - POSTGRES_USER=labelstudio
-      - POSTGRES_PASSWORD=${LABEL_STUDIO_DB_PASSWORD:?isi LABEL_STUDIO_DB_PASSWORD di Coolify}
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
     volumes:
       - ${LABEL_STUDIO_DB_HOST_DIR:-/data/label-studio/postgres}:/var/lib/postgresql/data
     mem_limit: 512m
