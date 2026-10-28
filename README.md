@@ -16,8 +16,8 @@ Repo ini **hanya berisi konfigurasi**; aplikasinya memakai image resmi
 | File | Isi |
 |---|---|
 | `docker-compose.yaml` | Service `label-studio` (1.13.1, sama dengan carton-trainer) + `postgres` 16, volume, health check |
-| `label-config.xml` | Tampilan labeling: 4 pilihan dengan hotkey 1–4 |
-| `PANDUAN-LABELING.md` | Panduan singkat untuk tim labeling (boleh dibagikan) |
+| `label-config.xml` | Tampilan labeling: 5 pilihan dengan hotkey 1–5 (panduan v3) |
+| `PANDUAN-LABELING.md` | Panduan singkat untuk tim labeling (boleh dibagikan), contoh foto di `contoh/` |
 | `.env.example` | Variabel untuk menjalankan lokal |
 
 ## Kebutuhan resource
